@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "JS syntax check on save",
+      "description": "Advisory node --check after saving .js files; never blocks the agent.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.(js|mjs)$",
+      "action": {
+        "type": "command",
+        "command": "bash scripts/check-syntax.sh"
+      },
+      "timeout": 30
+    }
+  ]
+}

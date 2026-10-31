@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+*.log
+/tmp/
+# 注意：.kiro 目录绝不加入 .gitignore（Kiroween 提交硬性要求）
