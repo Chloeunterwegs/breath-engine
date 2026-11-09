@@ -6,6 +6,8 @@
 2. visual/ —— 侗锦纹样渲染（Canvas 2D）
 3. ui/ —— 状态机与引导文案
 
+参数外置：声学/视觉可调参数统一在 js/config.js，三个子系统只读不写。
+
 ## audio/
 - BreathDetector：getUserMedia → AnalyserNode → 振幅包络（平滑 + 起音阈值）→
   输出 onBreathIn / onBreathOut 事件。
@@ -16,8 +18,10 @@
 - DemoMode：合成呼吸包络注入 BreathDetector 输出，供无麦克风演示（AC6）。
 
 ## visual/
-- BrocadeRenderer：菱形骨架纹样铺底；每个 AI 声部 = 一个半透明光斑，
-  位置与透明度由声部状态机驱动；纹样全局包络 = 用户音量映射。
+- BrocadeRenderer：菱形骨架纹样铺底；每个 AI 声部 = 一缕暖色光斑。
+  核心母题「断气 → 托住」：主光斑（你的呼吸）在换气 0.4s 处断开时，邻声部光斑
+  慢半拍浮出托住它，拧成支声织体；纹样全局包络 = 用户音量映射。
+- 透视开关（加分项，T8 有余力再做）：一键关掉表层纹样，只看声部状态机骨架。
 - 帧同步：requestAnimationFrame 与音频事件通过时间戳对齐（AC5）。
 
 ## ui/
