@@ -26,6 +26,15 @@ AI 合唱（侗族大歌式支声织体）在检测到呼吸周期后「慢半�
 Marvin 四点——掀引擎盖+DialKit、视觉母题 Helix/Braid、唯一 Showstopper+去杂音、
 可打断的物理手感——收敛成三条改造决定，其余全部砍出 MVP：
 
+> 出处：Marvin Schwaibold（Shopify 产品设计工作室负责人）× Aaron Epstein，
+> Y Combinator Design Review《The New Full-Stack Designer》，2026-10-26：
+> 视频 https://youtu.be/eojywvxqoLc ，文字摘要
+> https://murmurcast.com/summaries/y-combinator/the-new-full-stack-designer 。
+> 四点转写自源会话 local-19d7f916e09ff8c6…（2026-10-31）message 28921。
+> 建卡时另有一版转述四点（成品体验先行／技术讲成故事／产品×设计×传播一体／可演示的最小闭环），
+> 其映射：成品体验先行→决定 1（第一秒即成品）；技术讲成故事→决定 1（不用算法词，用动作讲）；
+> 产品×设计×传播一体→决定 1+3；可演示的最小闭环→MVP 验收线。
+
 1. **一个母题讲完全片（视觉母题 + 唯一 Showstopper）。**
    打开第一秒就是全屏暗色侗锦 + 一次呼吸引导：无介绍页、无登录、无满屏按钮。
    全场只有一件事可看——你的一口气（一缕暖色光）走到断气 0.4 秒，旁边浮出第二、第三缕
