@@ -26,7 +26,7 @@
   产出：VoiceEngine 扩展至 ≥4 声部；声部 i 进入延迟 = i × 一个呼吸周期（慢半拍，D1 母题的声音侧）；静默 8s 逐层退场；entering/singing/leaving 可随时被打断——新呼吸打断退场、静默打断进入，状态转换走阻尼包络（D3/AC9）。
   验收：连续呼吸 → ≥4 声部依次慢半拍进入（AC4）；打断退场后无残响堆积、无锁死状态（AC9）；退场静默秒数从 config.js 读（D2）。
 
-- [ ] T6 BrocadeRenderer 母题渲染（AC5 · AC9 视觉侧 · D1/D3）
+- [x] T6 BrocadeRenderer 母题渲染（AC5 · AC9 视觉侧 · D1/D3）
   产出：js/visual/brocade-renderer.js —— Canvas 2D 菱形骨架纹样铺底；每声部一缕暖色光斑；「断气→托住」母题：主光斑换气断开时邻声部光斑慢半拍浮出托住、拧成支声织体（D1）；背景微光全局氛围层，亮度随呼吸包络振动（D3）；纹样明灭可打断、位移与透明度阻尼回弹（D3/AC9）。
   验收：requestAnimationFrame 与音频事件时间戳对齐、同帧渲染（AC5）；停止呼吸 → 光斑与纹样按阻尼曲线退场、无死板补间（AC9）；纹样密度、光斑数量、明灭曲线从 config.js 读（D2）。
 

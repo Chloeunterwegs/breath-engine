@@ -97,8 +97,9 @@ export const CONFIG = {
     spots: {
       radius: 26,               // 光斑基准半径（px）
       haloScale: 3.2,           // 光晕倍率
-      followDamping: 0.10,      // 光斑跟随包络的阻尼系数
-      riseDamping: 0.045,       // 「托住/退场」大位移的阻尼回弹系数（D3/AC9）
+      followDamping: 0.10,      // 光斑跟随包络的阻尼系数（按 60fps 基准归一）
+      springOmegaHz: 0.35,      // 欠阻尼弹簧角频率（Hz）：回弹快慢
+      springZeta: 0.6,          // 弹簧阻尼比：<1 欠阻尼=有回弹（D3 阻尼回弹）
       driftSeconds: 9,          // 光斑缓慢漂移周期（烛火悬浮感）
     },
 
