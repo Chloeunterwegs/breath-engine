@@ -18,6 +18,7 @@ export const CONFIG = {
       },
       fftSize: 1024,              // FFT 尺寸：低频分辨率优先，不求高频细节
       smoothingTimeConstant: 0.5, // analyser 自带平滑，检测层另做一重包络平滑
+      inputGain: 2.2,             // 原始 RMS 抬升到检测阈值工作区间：安静呼吸也能过起音线
     },
 
     detector: {

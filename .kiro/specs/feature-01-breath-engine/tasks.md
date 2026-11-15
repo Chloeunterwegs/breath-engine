@@ -9,7 +9,7 @@
   config.js 分组注释：声学参数（五声调式音阶表、慢半拍延迟倍率、退场静默秒数）与视觉参数（纹样密度、光斑数量、明灭曲线、微光亮度、断气窗口秒数）。
   验收：`python3 -m http.server` 直开无 404；页面加载 <1s，Network 面板除本机外零请求（AC1）；上述参数只在 config.js 声明，JS 源码零写死（D2）。
 
-- [ ] T2 音频输入管线（AC2/AC3 前置 · D2）
+- [x] T2 音频输入管线（AC2/AC3 前置 · D2）
   产出：js/engine/audio-input.js —— getUserMedia 授权 + AnalyserNode 振幅包络 + 实时音量条自检可视化。
   权限被拒走 AC2 分支：非阻塞提示 + 引导进 Demo Mode，页面不白屏不卡死。
   验收：说话/呼吸时音量条实时响应；拒绝授权后页面仍可操作并可进入演示模式；平滑系数、FFT 尺寸等采样参数从 config.js 读（D2）。

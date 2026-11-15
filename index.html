@@ -20,10 +20,18 @@
     user-select: none;
   }
   #stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  /* T2 自检音量条：包络实时响应，细线不入构图焦点 */
+  #meter {
+    position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+    background: #E8A25C;             /* 与 config.visual.palette.spotWarm 同源的暖橙 */
+    transform-origin: 0 50%; transform: scaleX(0);
+    opacity: 0.55; z-index: 5;
+  }
 </style>
 </head>
 <body>
   <canvas id="stage" aria-label="侗锦纹样与声部光斑"></canvas>
+  <div id="meter" aria-hidden="true"></div>
   <!-- 入口随任务推进：T1 先挂参数表（模块加载自检，直开无 404），T7 起换为 ui/state-machine.js 引导 -->
   <script type="module" src="js/config.js"></script>
 </body>
