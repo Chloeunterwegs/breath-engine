@@ -4,7 +4,7 @@
 > 硬约束（每条任务同）：纯前端、零 API Key、零 CDN、零后端；仓库根 `python3 -m http.server` 直开即可验证，判定方法见 requirements.md。
 > 目录约定：js/engine/（检测与合成）、js/visual/（渲染）、js/ui/（状态机与文案），与 design.md 一致。
 
-- [ ] T1 项目骨架与参数外置（AC1 · D2）
+- [x] T1 项目骨架与参数外置（AC1 · D2）
   产出：index.html 单页壳（全屏画布挂载点 + 暗色侗锦底色）；js/config.js；js/engine/、js/visual/、js/ui/ 目录。
   config.js 分组注释：声学参数（五声调式音阶表、慢半拍延迟倍率、退场静默秒数）与视觉参数（纹样密度、光斑数量、明灭曲线、微光亮度、断气窗口秒数）。
   验收：`python3 -m http.server` 直开无 404；页面加载 <1s，Network 面板除本机外零请求（AC1）；上述参数只在 config.js 声明，JS 源码零写死（D2）。

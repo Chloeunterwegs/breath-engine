@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>换气 BreathCatcher</title>
+<style>
+  /* T1 结构样式：全屏画布挂载点 + 暗色侗锦底色。
+     文案层 / 自检音量条 / 控制键随 T2/T7/T8 各自任务落地，不在此预置空壳。 */
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    /* 近黑靛蓝底色，不用纯黑（design-language）。此处为加载首帧兜底色，
+       与 config.visual.palette.base 同源；画布起来后由渲染层接管。 */
+    background: #0B0D17;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+  #stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+  <canvas id="stage" aria-label="侗锦纹样与声部光斑"></canvas>
+  <!-- 入口随任务推进：T1 先挂参数表（模块加载自检，直开无 404），T7 起换为 ui/state-machine.js 引导 -->
+  <script type="module" src="js/config.js"></script>
+</body>
+</html>
