@@ -169,9 +169,11 @@ class App {
     const inWeave = voices.filter((v) => v.state !== 'asleep' && v.state !== 'leaving').length;
     const key = next === 'singing' && inWeave >= 2 ? 'singingWeave' : next;
     this._setCopy(key);
-    // 自检音量条只在麦克风模式下可见（Demo 的包络不走麦克风）
-    this._meterEl.style.display =
-      next === 'listening' || next === 'singing' || next === 'fading' ? 'block' : 'none';
+    // 自检音量条只在麦克风模式下可见（Demo 的包络不走麦克风，DEMO-SCRIPT.md 同口径）
+    const micVisible =
+      !this._demoActive &&
+      (next === 'listening' || next === 'singing' || next === 'fading');
+    this._meterEl.style.display = micVisible ? 'block' : 'none';
   }
 
   _setCopy(key) {
