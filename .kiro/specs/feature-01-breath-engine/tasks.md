@@ -34,7 +34,7 @@
   产出：js/ui/state-machine.js（idle→prompting→listening→singing→fading，加 denied 分支）+ js/ui/copy.js（中文主引导 + 英文副标题，中文在前）；权限被拒走 denied：非阻塞提示 + 一键进 Demo（AC2）。
   验收：打开第一秒即全屏纹样 + 呼吸引导，无介绍页、无登录、无满屏按钮（AC8 · D1）；文案切换与状态机同步；麦克风被拒时应用功能完整、可进演示模式（AC2）。
 
-- [ ] T8 DemoMode 与彩排（AC6 · D2 · MVP 验收线第 4 条）
+- [x] T8 DemoMode 与彩排（AC6 · D2 · MVP 验收线第 4 条）
   产出：js/engine/demo-mode.js —— 按钮触发合成呼吸包络注入 BreathDetector 输出，与真实麦克风同一事件通路；注入包络参数从 config.js 读（D2）；3 分钟 Demo 彩排脚本一页（开场引导→单次呼吸→连续合唱→停止退场）。
   加分项（有余力再做，不进验收线，D2）：透视开关——config.js 预留参数即接口，开关 UI 关掉表层纹样、只看声部状态机骨架。
   验收：无麦克风环境（或拒绝授权）下 Demo 全流程可录、走完整状态机；演示包络与真实呼吸触发同一事件路径。

@@ -10,6 +10,7 @@ import { BrocadeRenderer } from '../visual/brocade-renderer.js';
 import { AudioInput } from '../engine/audio-input.js';
 import { BreathDetector } from '../engine/breath-detector.js';
 import { VoiceEngine } from '../engine/voice-engine.js';
+import { DemoMode } from '../engine/demo-mode.js';
 
 const UI_STATES = ['idle', 'prompting', 'listening', 'singing', 'fading', 'denied'];
 
@@ -27,7 +28,7 @@ class App {
     this._detector = new BreathDetector();
     this._audio = new AudioInput();
     this._engine = null;          // 首次手势后才创建（AudioContext 需用户手势）
-    this._demo = null;            // demo-mode.js 随 task-8 落位后在此实例化
+    this._demo = new DemoMode();  // 合成呼吸源：与真实麦克风互为可换源（AC6 同一事件通路）
     this._demoActive = false;
 
     this._uiState = 'idle';
@@ -120,10 +121,9 @@ class App {
     }
   }
 
-  // Demo 开关（AC6，接线随 task-8 落位）：合成呼吸包络注入 BreathDetector，
+  // Demo 开关（AC6）：合成呼吸包络注入 BreathDetector，
   // 与真实麦克风同一事件通路；无麦克风环境走完全状态机。
   _toggleDemo() {
-    if (!this._demo) return;      // task-8 落位前按钮静默待命，不报错不阻塞
     if (!this._demoActive) {
       this._demoActive = true;
       this._audio.stop();         // 演示时不采样麦克风，省电且防双包络
