@@ -41,7 +41,7 @@ CDP 可信点击 + `Network.emulateNetworkConditions` offline 仿真；状态走
 | AC1 加载 | pass | loadEventEnd 62ms（<1s）；resource 8 条全 127.0.0.1，零 404 |
 | AC2 denied | pass | 中性可信点击→prompting→denied；文案「麦克风没来——不碍事」非阻塞；演示按钮点亮 #F2D9A6（透视按钮对照组未点亮）；meter idle 态 display:none |
 | AC3 延迟 | pass | lastLatencyMs 实测 49.1–127.4ms，全部 <150ms（tau=90ms，帧率无关） |
-| AC4 支声 | **FAIL** | voice0 即时回应✓；voice1/2 仅在 demo 段间静默空档进场；voice3 全程 listening（10.9s→134.9s，两轮实跑一致）——见 FAIL-1，跟进卡 t_3d474cc1 |
+| AC4 支声 | pass（11-16 修复复核） | voice_i 进场 = 武装起音 + i×period，实测偏差 +33/+233/+133ms（300ms 采样粒度内）；4/4 齐 t0+22.75s；choir1 稳态 160/160 样本全 4/4——见 FAIL-1 修复记录 |
 | AC5 同帧 | pass | 音频事件帧头消费、渲染同帧（performance.now() 同源时钟）；光斑明灭随包络逐帧联动（时间线采样+截图） |
 | AC6 Demo | pass | denied 一键进演示；合成包络与麦克风同一 setSource(fn) 通路；全周期无麦克风走通 |
 | AC7 真机 | 未验 | 属 T9（2026-11-30 前），本轮不施工 |
@@ -79,9 +79,22 @@ leaving 声部 enterAt 为 null 照旧可被新呼吸重武装。修后 voice_i 
 
 跟进卡：**t_3d474cc1**（本验收通过后自动就绪；T9/T10 在其完成前不开工）。
 
+修复复核（2026-11-16 · 修复卡 t_3d474cc1，commit aa43879）：进场拍只武装一次
+已落 `js/engine/voice-engine.js`，http.server + CDP 可信点击全周期实跑两轮（run1 进场侧
+通过后工具断连、页面零错误；run2 完整全周期）：
+
+- AC4 实证：voice1/2/3 进场 = 武装起音(12047.8ms, periodMs=4000 fallback) + i×period，
+  偏差 +33/+233/+133ms（300ms 采样粒度内）；4/4 声部齐 t0+22.75s；choir1 稳态
+  （27–75s 窗口）160/160 样本全 4/4；连续呼吸段织体不散（run1 32–121s 全程 4/4 singing）
+- AC9 回归：8s 静默→逐层 leaving（+0.27/1.47/2.67/3.88s，exitStagger 1.2s×i 照旧）
+  →t0+137.95s 全 asleep→同帧回 listening——退场不被修复破坏
+- 健康面：console 零错误；lastLatencyMs 60.5–84.0ms（AC3 未受损）；时间线 465 样本 +
+  事件流水 28 条留档（修复卡附件：ac4-fix-timeline.json / ac4-fix-e2e.log /
+  ac4-fix-choir1-all4-singing.png / ac4-fix-silence-all-asleep.png）
+
 ### 提交清单（commit）
 
-15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 本验收记录 1 笔：
+15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 验收记录 1 笔（4f261cd）+ AC4 修复 2 笔（aa43879 起）：
 
 ```
 6426116 docs: 定方向——Marvin 四点收敛为三条改造决定，明确 MVP 验收线
@@ -99,7 +112,9 @@ c1cb616 feat(task-8): DemoMode 与彩排
 7e3ba30 fix(engine): 包络源接口统一为函数注入 + 主循环先续帧不断流
 792ea09 fix(ui): 演示模式隐藏自检音量条
 8281766 fix(engine): detector 空源=无声——包络归零衰减，退场链路照常触发
-（本笔）docs(notes): MVP 验收记录 + 最终提交清单——AC4 fail 实抓与修复跟进卡
+4f261cd docs(notes): MVP 验收记录 + 最终提交清单——AC4 fail 实抓与修复跟进卡
+aa43879 fix(engine): AC4 进场拍只武装一次——已武装不推拍，慢半拍到拍
+（本笔）docs(notes): AC4 修复复核记录——进场=武装起音+i×period 实证
 ```
 
 ### Kiro 使用说明
