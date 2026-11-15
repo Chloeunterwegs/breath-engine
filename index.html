@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>换气 BreathCatcher</title>
 <style>
-  /* T1 结构样式：全屏画布挂载点 + 暗色侗锦底色。
-     文案层 / 自检音量条 / 控制键随 T2/T7/T8 各自任务落地，不在此预置空壳。 */
+  /* T1 结构样式：全屏画布挂载点 + 暗色侗锦底色。 */
   :root { color-scheme: dark; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
@@ -27,12 +26,72 @@
     transform-origin: 0 50%; transform: scaleX(0);
     opacity: 0.55; z-index: 5;
   }
+  /* T7 文案层：中文主引导衬线（Songti 系）+ 英文副标题同族衬线（design-language 字体） */
+  #copy-layer {
+    position: fixed; inset: 0; z-index: 4;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding-bottom: 18vh; text-align: center; pointer-events: none;
+  }
+  #copy-main {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: clamp(22px, 5.4vw, 34px);
+    letter-spacing: 0.14em;
+    color: #E8DCC8;
+    opacity: 0.92;
+  }
+  #copy-sub {
+    margin-top: 10px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(11px, 2.6vw, 14px);
+    letter-spacing: 0.22em;
+    color: #8E9AB8;
+  }
+  #copy-hint {
+    margin-top: 14px;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: #67718C;
+  }
+  /* T7 控制键：单个幽灵按钮，不成「满屏按钮」（AC8） */
+  #controls {
+    position: fixed; left: 0; right: 0; z-index: 6;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    display: flex; justify-content: center; gap: 10px;
+  }
+  #controls button {
+    pointer-events: auto;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+    font-size: 12px; letter-spacing: 0.12em;
+    color: #A9B3CC;
+    background: rgba(20, 24, 40, 0.55);
+    border: 1px solid rgba(138, 150, 180, 0.28);
+    border-radius: 999px;
+    padding: 8px 18px;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  #controls button:active { transform: scale(0.97); }
+  /* denied 分支：演示按钮亮起为唯一出路（AC2 非阻塞引导） */
+  body[data-state="denied"] #demo-btn {
+    color: #F2D9A6;
+    border-color: rgba(232, 162, 92, 0.55);
+  }
 </style>
 </head>
-<body>
+<body data-state="idle">
   <canvas id="stage" aria-label="侗锦纹样与声部光斑"></canvas>
   <div id="meter" aria-hidden="true"></div>
-  <!-- 入口随任务推进：T1 先挂参数表（模块加载自检，直开无 404），T7 起换为 ui/state-machine.js 引导 -->
-  <script type="module" src="js/config.js"></script>
+  <div id="copy-layer" aria-live="polite">
+    <p id="copy-main"></p>
+    <p id="copy-sub"></p>
+    <p id="copy-hint"></p>
+  </div>
+  <div id="controls">
+    <button id="demo-btn" type="button">演示模式</button>
+  </div>
+  <!-- T7 起：引导接线完成，入口换为状态机（ESM 图根，index.html 唯一 script） -->
+  <script type="module" src="js/ui/state-machine.js"></script>
 </body>
 </html>

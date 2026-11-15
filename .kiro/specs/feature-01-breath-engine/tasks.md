@@ -30,7 +30,7 @@
   产出：js/visual/brocade-renderer.js —— Canvas 2D 菱形骨架纹样铺底；每声部一缕暖色光斑；「断气→托住」母题：主光斑换气断开时邻声部光斑慢半拍浮出托住、拧成支声织体（D1）；背景微光全局氛围层，亮度随呼吸包络振动（D3）；纹样明灭可打断、位移与透明度阻尼回弹（D3/AC9）。
   验收：requestAnimationFrame 与音频事件时间戳对齐、同帧渲染（AC5）；停止呼吸 → 光斑与纹样按阻尼曲线退场、无死板补间（AC9）；纹样密度、光斑数量、明灭曲线从 config.js 读（D2）。
 
-- [ ] T7 状态机与引导文案（AC8 · AC2 · D1 第一秒）
+- [x] T7 状态机与引导文案（AC8 · AC2 · D1 第一秒）
   产出：js/ui/state-machine.js（idle→prompting→listening→singing→fading，加 denied 分支）+ js/ui/copy.js（中文主引导 + 英文副标题，中文在前）；权限被拒走 denied：非阻塞提示 + 一键进 Demo（AC2）。
   验收：打开第一秒即全屏纹样 + 呼吸引导，无介绍页、无登录、无满屏按钮（AC8 · D1）；文案切换与状态机同步；麦克风被拒时应用功能完整、可进演示模式（AC2）。
 
