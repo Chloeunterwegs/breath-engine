@@ -22,7 +22,7 @@ export const CONFIG = {
     },
 
     detector: {
-      envelopeSmoothing: 0.12,    // 振幅包络一阶平滑系数：越小越钝，滤掉吞咽咳嗽的尖峰
+      envelopeTauMs: 90,          // 包络平滑时间常数：起音延迟 ≈ tau，与帧率无关（AC3 <150ms 预算）
       onsetThreshold: 0.14,       // 起音阈值：包络上行穿越判「一口气来了」（AC3）
       releaseThreshold: 0.07,     // 回落阈值（迟滞双阈）：低于判「气断了」，防临界抖动反复触发
       silenceSeconds: 8,          // 退场静默秒数：停止呼吸 8s → 逐层退场（AC4 / MVP 验收线）

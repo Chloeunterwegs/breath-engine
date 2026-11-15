@@ -14,7 +14,7 @@
   权限被拒走 AC2 分支：非阻塞提示 + 引导进 Demo Mode，页面不白屏不卡死。
   验收：说话/呼吸时音量条实时响应；拒绝授权后页面仍可操作并可进入演示模式；平滑系数、FFT 尺寸等采样参数从 config.js 读（D2）。
 
-- [ ] T3 BreathDetector 呼吸事件（AC3 · D3 信号源）
+- [x] T3 BreathDetector 呼吸事件（AC3 · D3 信号源）
   产出：js/engine/breath-detector.js —— 振幅包络平滑 + 起音检测，输出 onBreathIn/onBreathOut 事件与静默计时。
   验收：呼吸动作触发事件，DevTools console 打点延迟 <150ms（AC3）；停止呼吸后静默信号准确（D3「停止呼吸即退场」的信号源）；起音阈值、退场静默秒数从 config.js 读（D2）。
 
