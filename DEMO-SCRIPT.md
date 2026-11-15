@@ -5,8 +5,12 @@
 
 ## 录前准备
 
-1. 仓库根起服务：`python3 -m http.server 8080`
-2. 手机与电脑同网段，手机浏览器访问 `http://<电脑IP>:8080`（iPhone Safari 优先，engineering-standards）
+1. 桌面自测：仓库根起 `python3 -m http.server 8080`，浏览器开 `http://localhost:8080`
+2. 真机走查/录屏：手机与电脑同网段（iPhone Safari 优先，engineering-standards），改走
+   HTTPS——仓库根 `python3 scripts/serve-https.py "$PWD" <证书> <私钥> 8443`，手机浏览器开
+   `https://<电脑IP>:8443`。真机麦克风需要安全上下文，局域网 IP 走 http 时浏览器不暴露
+   `navigator.mediaDevices`，麦克风路径整条不可用；证书与私钥不进仓库，签发与 iPhone
+   上机路线见交付包 05-T9 预检单
 3. 不锁屏、不切后台（Web Audio 在后台会挂起）
 4. 无麦克风环境或拒绝授权也能录完整流程：点「演示模式」按钮，
    合成呼吸包络注入 BreathDetector，与真实呼吸同一事件通路（AC6）
@@ -26,5 +30,7 @@
 ## 真机注意（T9 前置）
 
 - 麦克风授权弹窗出现在第一次点按后；拒绝则走 denied 分支，演示按钮亮起（AC2）——两条路都能录
+- 若经 http（非安全上下文）打开，`navigator.mediaDevices` 整条不存在，点按后落 denied
+  分支是预期行为而非缺陷——真机走查/录屏按录前准备第 2 步走 HTTPS
 - 自检音量条在页面顶端（麦克风模式可见，演示模式隐藏）
 - 「透视」按钮/按键 V 可关掉表层纹样只看声部状态机骨架（T8 加分项，录彩排时不开启）

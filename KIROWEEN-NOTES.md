@@ -39,7 +39,7 @@ CDP 可信点击 + `Network.emulateNetworkConditions` offline 仿真；状态走
 | 项 | 判定 | 证据 |
 | --- | --- | --- |
 | AC1 加载 | pass | loadEventEnd 62ms（<1s）；resource 8 条全 127.0.0.1，零 404 |
-| AC2 denied | pass | 中性可信点击→prompting→denied；文案「麦克风没来——不碍事」非阻塞；演示按钮点亮 #F2D9A6（透视按钮对照组未点亮）；meter idle 态 display:none |
+| AC2 denied | pass | 中性可信点击→prompting→denied；文案「麦克风没来——不碍事」非阻塞；演示按钮点亮 #F2D9A6（透视按钮对照组未点亮）；meter idle 态 display:none；LAN http 下 mediaDevices 不存在的最恶劣场景同落 denied 分支零砸穿（T9 预检实测 2026-11-16） |
 | AC3 延迟 | pass | lastLatencyMs 实测 49.1–127.4ms，全部 <150ms（tau=90ms，帧率无关） |
 | AC4 支声 | pass（11-16 修复复核） | voice_i 进场 = 武装起音 + i×period，实测偏差 +33/+233/+133ms（300ms 采样粒度内）；4/4 齐 t0+22.75s；choir1 稳态 160/160 样本全 4/4——见 FAIL-1 修复记录 |
 | AC5 同帧 | pass | 音频事件帧头消费、渲染同帧（performance.now() 同源时钟）；光斑明灭随包络逐帧联动（时间线采样+截图） |
@@ -94,7 +94,7 @@ leaving 声部 enterAt 为 null 照旧可被新呼吸重武装。修后 voice_i 
 
 ### 提交清单（commit）
 
-15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 验收记录 1 笔（4f261cd）+ AC4 修复 2 笔（aa43879、214ed56）+ README 1 笔（T10 使用说明交付件）＝19 笔：
+15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 验收记录 1 笔（4f261cd）+ AC4 修复 2 笔（aa43879、214ed56）+ README 1 笔（25e3437，T10 使用说明交付件）+ T9 前置修复 1 笔（本笔，真机步骤改 HTTPS + serve-https.py 入仓）＝20 笔：
 
 ```
 6426116 docs: 定方向——Marvin 四点收敛为三条改造决定，明确 MVP 验收线
@@ -115,7 +115,8 @@ c1cb616 feat(task-8): DemoMode 与彩排
 4f261cd docs(notes): MVP 验收记录 + 最终提交清单——AC4 fail 实抓与修复跟进卡
 aa43879 fix(engine): AC4 进场拍只武装一次——已武装不推拍，慢半拍到拍
 214ed56 docs(notes): AC4 修复复核记录——进场=武装起音+i×period 实证
-（本笔）docs(readme): T10 使用说明——30 秒上手、四幕录制指引、Kiro 兜底条款如实入文
+25e3437 docs(readme): T10 使用说明——30 秒上手、四幕录制指引、Kiro 兜底条款如实入文
+（本笔）docs(t9-prep): 真机步骤改 HTTPS + serve-https.py 入仓——真机麦克风需要安全上下文，口径三处一致
 ```
 
 ### Kiro 使用说明

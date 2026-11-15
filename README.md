@@ -9,9 +9,14 @@ AI 声部「慢半拍」进入，陪你换气，不是给你伴奏。
 ## Run（30 秒上手）
 ```bash
 python3 -m http.server 8080
-# 手机与电脑同网段，浏览器打开 http://<电脑IP>:8080
+# 桌面自测：浏览器打开 http://localhost:8080
 ```
 或直接双击 index.html（Web Audio 需非 file:// 协议时以 http.server 为准）。
+
+真机走查/录屏：先 `python3 scripts/serve-https.py "$PWD" <证书> <私钥> 8443` 起 HTTPS
+（真机麦克风需要安全上下文，局域网 IP 走 http 时浏览器不暴露 `navigator.mediaDevices`），
+手机开 `https://<电脑IP>:8443`——serve-https.py 是开发期脚本，不属产品运行链路，
+证书与私钥不进仓库。详见 [DEMO-SCRIPT.md](DEMO-SCRIPT.md)「录前准备」。
 
 打开后：
 1. 点一下屏幕，把麦克风交给它（iPhone Safari / Android Chrome 均可）
