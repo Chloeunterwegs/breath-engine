@@ -127,7 +127,8 @@ export class VoiceEngine {
   }
 
   // T5 支声调度：声部 1 即时回应；声部 i 进场拍 = 呼吸 + i × 呼吸周期 × entryDelayRatio
-  // （慢半拍，D1 声音侧）。一切打断在这里发生：新呼吸清退场标记、改写进场标记。
+  // （慢半拍，D1 声音侧）。一切打断在这里发生：新呼吸清退场标记；进场拍只武装一次
+  // （AC4）——已武装不推拍，连续呼吸下慢半拍才能追上：进场 = 武装起音 + i×period。
   handleBreathIn(ev) {
     this._breathCount += 1;
     const periodMs = ev.periodMs || CONFIG.audio.detector.periodFallbackSeconds * 1000;
@@ -150,7 +151,11 @@ export class VoiceEngine {
         continue;
       }
       v.leaveAt = null;            // 新呼吸打断退场（AC9）：mid-fall 的声部重新武装
-      v.enterAt = ev.at + v.index * periodMs * this._entryDelayRatio;
+      // 进场拍只武装一次（AC4）：已武装不推拍——否则连续呼吸下 i×period 恒大于
+      // 呼吸间隔，进场拍永远被下一口气推走，慢半拍永不到拍
+      if (v.enterAt === null) {
+        v.enterAt = ev.at + v.index * periodMs * this._entryDelayRatio;
+      }
       v.state = 'listening';
     }
   }
