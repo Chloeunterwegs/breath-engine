@@ -183,8 +183,10 @@ class App {
     this._copyHint.textContent = c.hint;
   }
 
-  // 主循环：检测 → 声部 → 渲染 同一帧内推进（AC5）；UI 从声部状态回流（fading→listening）
+  // 主循环：先续帧再干活——单帧异常不断流（AC2 不白屏不卡死），错误仍逐帧上抛可见。
+  // 检测 → 声部 → 渲染 同一帧内推进（AC5）；UI 从声部状态回流（fading→listening）。
   _loop() {
+    requestAnimationFrame(this._loop);
     const now = performance.now();
     this._detector.update(now);
     const envelope = this._detector.smoothed;
@@ -199,7 +201,6 @@ class App {
       }
     }
     this._renderer.render(now, envelope, this._engine ? this._engine.getVoiceStates() : null);
-    requestAnimationFrame(this._loop);
   }
 }
 

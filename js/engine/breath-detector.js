@@ -35,15 +35,16 @@ export class BreathDetector {
     this.lastLatencyMs = null;    // 最近一次起音检测延迟：AC3 <150ms 的直接证据
   }
 
-  // 包络源注入口：真实麦克风（AudioInput.getEnvelope）与 Demo 合成（DemoMode.getEnvelope）
-  // 走同一入口——AC6「同一事件通路」在方法签名上成立，下层无法区分来源。
+  // 包络源注入口：真实麦克风（() => audio.getEnvelope()）与 Demo 合成
+  // （() => demo.getEnvelope(now)）互为可换函数——AC6「同一事件通路」在注入
+  // 签名上成立，检测层无法也不需要区分来源。
   setSource(provider) {
     this._provider = provider;
   }
 
   update(now) {
     if (!this._provider) return;
-    const raw = this._provider.getEnvelope() || 0;
+    const raw = this._provider() || 0;
 
     // 帧间 dt 归一的一阶平滑：后台标签页回来时不产生大跳
     const dt = this._lastUpdateAt === null ? 16.7 : Math.min(100, now - this._lastUpdateAt);

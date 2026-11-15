@@ -48,7 +48,7 @@ export class AudioInput {
   }
 
   // 每次调用采一帧时域数据算 RMS 包络。inputGain 把原始电平抬到检测阈值的工作区间；
-  // 真实麦克风与 Demo 合成包络共用同一条消费路径（BreathDetector 只认 getEnvelope 的产出）。
+  // 以包络函数注入 BreathDetector，与 Demo 合成包络共用同一消费路径（AC6）。
   getEnvelope() {
     if (!this.running || !this._analyser) return 0;
     this._analyser.getByteTimeDomainData(this._buffer);

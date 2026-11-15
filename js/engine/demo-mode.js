@@ -1,6 +1,6 @@
 // js/engine/demo-mode.js —— T8：合成呼吸包络注入 BreathDetector 输出（AC6）。
-// 与真实麦克风走同一事件通路：AudioInput.getEnvelope 与 DemoMode.getEnvelope 是
-// BreathDetector.setSource 的两种可互换源，检测层无法也不需要区分来源。
+// 与真实麦克风走同一事件通路：以包络函数互为 BreathDetector.setSource 的可换源，
+// 检测层无法也不需要区分来源。
 // 包络按 config.demo.script 确定性生成（seeded，无随机）：3 分钟彩排
 // 开场引导 → 单次呼吸 → 连续合唱 → 停止退场，参数全部从 config 读（D2）。
 
