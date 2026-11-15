@@ -39,6 +39,7 @@ export const CONFIG = {
       entryDelayRatio: 1.0,       // 慢半拍延迟倍率：声部 i 进入延迟 = i × 呼吸周期 × 此值（D1 声音侧）
       exitStaggerSeconds: 1.2,    // 退场逐层间隔：静默触发后各声部错开此值依次退场（AC4/AC9）
       timbre: {
+        headroom: 0.9,            // 汇流总增益折算基准：总增益=headroom/声部数，多声部不爆音
         sineGain: 0.65,           // 正弦分量
         triangleGain: 0.45,       // 三角分量：与正弦混合出合唱质感（design.md 音色）
         detuneCents: 6,           // 轻微 detune 静态量

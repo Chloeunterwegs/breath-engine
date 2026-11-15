@@ -18,7 +18,7 @@
   产出：js/engine/breath-detector.js —— 振幅包络平滑 + 起音检测，输出 onBreathIn/onBreathOut 事件与静默计时。
   验收：呼吸动作触发事件，DevTools console 打点延迟 <150ms（AC3）；停止呼吸后静默信号准确（D3「停止呼吸即退场」的信号源）；起音阈值、退场静默秒数从 config.js 读（D2）。
 
-- [ ] T4 VoiceEngine 单声部（AC4 声部 1 · D1 声音基底 + D2）
+- [x] T4 VoiceEngine 单声部（AC4 声部 1 · D1 声音基底 + D2）
   产出：js/engine/voice-engine.js —— 五声调式音阶表 + 声部 1 状态机（asleep→listening→entering→singing→leaving）；每声部 oscillator（正弦/三角混合）+ 低通滤波 + 轻微 detune。
   验收：单次呼吸触发声部 1 回应，音高全部落在调式表内；呼吸停止后声部 1 可退场；调式表、音色参数从 config.js 读（D2）。
 
