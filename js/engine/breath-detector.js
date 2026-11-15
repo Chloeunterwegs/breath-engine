@@ -43,8 +43,9 @@ export class BreathDetector {
   }
 
   update(now) {
-    if (!this._provider) return;
-    const raw = this._provider() || 0;
+    // 源为空 = 无声：包络按 0 衰减，静默计时照常走——Demo 关闭/麦克风停采即退场信号
+    // （停止呼吸即退场，D3；此前 null 直接 return 会让包络冻结、声部永不退场）
+    const raw = this._provider ? (this._provider() || 0) : 0;
 
     // 帧间 dt 归一的一阶平滑：后台标签页回来时不产生大跳
     const dt = this._lastUpdateAt === null ? 16.7 : Math.min(100, now - this._lastUpdateAt);
