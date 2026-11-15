@@ -94,7 +94,7 @@ leaving 声部 enterAt 为 null 照旧可被新呼吸重武装。修后 voice_i 
 
 ### 提交清单（commit）
 
-15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 验收记录 1 笔（4f261cd）+ AC4 修复 2 笔（aa43879 起）：
+15 笔至 8281766（3 docs + 8 feat + 4 端到端实抓修复）+ 验收记录 1 笔（4f261cd）+ AC4 修复 2 笔（aa43879、214ed56）+ README 1 笔（T10 使用说明交付件）＝19 笔：
 
 ```
 6426116 docs: 定方向——Marvin 四点收敛为三条改造决定，明确 MVP 验收线
@@ -114,7 +114,8 @@ c1cb616 feat(task-8): DemoMode 与彩排
 8281766 fix(engine): detector 空源=无声——包络归零衰减，退场链路照常触发
 4f261cd docs(notes): MVP 验收记录 + 最终提交清单——AC4 fail 实抓与修复跟进卡
 aa43879 fix(engine): AC4 进场拍只武装一次——已武装不推拍，慢半拍到拍
-（本笔）docs(notes): AC4 修复复核记录——进场=武装起音+i×period 实证
+214ed56 docs(notes): AC4 修复复核记录——进场=武装起音+i×period 实证
+（本笔）docs(readme): T10 使用说明——30 秒上手、四幕录制指引、Kiro 兜底条款如实入文
 ```
 
 ### Kiro 使用说明
