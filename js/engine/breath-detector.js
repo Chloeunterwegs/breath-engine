@@ -66,7 +66,7 @@ export class BreathDetector {
       this._lastBreathAt = now;
       this._silenceFired = false;
       if (this.onBreathIn) {
-        this.onBreathIn({ at: now, envelope: this.smoothed, latencyMs: this.lastLatencyMs });
+        this.onBreathIn({ at: now, envelope: this.smoothed, latencyMs: this.lastLatencyMs, periodMs: this.breathPeriod });
       }
     } else if (this._above && this.smoothed <= this._releaseThreshold) {
       // 气断：低于回落阈，静默计时从此刻起算（D3「停止呼吸即退场」的信号源）

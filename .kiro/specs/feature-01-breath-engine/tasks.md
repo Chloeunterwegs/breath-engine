@@ -22,7 +22,7 @@
   产出：js/engine/voice-engine.js —— 五声调式音阶表 + 声部 1 状态机（asleep→listening→entering→singing→leaving）；每声部 oscillator（正弦/三角混合）+ 低通滤波 + 轻微 detune。
   验收：单次呼吸触发声部 1 回应，音高全部落在调式表内；呼吸停止后声部 1 可退场；调式表、音色参数从 config.js 读（D2）。
 
-- [ ] T5 支声织体与可打断状态机（AC4/AC5 全声部 · AC9 声部侧 · D1/D3）
+- [x] T5 支声织体与可打断状态机（AC4/AC5 全声部 · AC9 声部侧 · D1/D3）
   产出：VoiceEngine 扩展至 ≥4 声部；声部 i 进入延迟 = i × 一个呼吸周期（慢半拍，D1 母题的声音侧）；静默 8s 逐层退场；entering/singing/leaving 可随时被打断——新呼吸打断退场、静默打断进入，状态转换走阻尼包络（D3/AC9）。
   验收：连续呼吸 → ≥4 声部依次慢半拍进入（AC4）；打断退场后无残响堆积、无锁死状态（AC9）；退场静默秒数从 config.js 读（D2）。
 

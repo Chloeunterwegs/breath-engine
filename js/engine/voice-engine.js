@@ -1,13 +1,13 @@
-// js/engine/voice-engine.js —— T4：五声调式音阶表 + 声部状态机 + 音色合成。
+// js/engine/voice-engine.js —— T4 单声部基底 + T5 支声织体与可打断状态机。
 // 每声部一张图：正弦+三角（轻微 detune）→ 状态包络（setTargetAtTime 阻尼，无硬切）
-// → 呼吸随动增益（逐帧微调）→ 低通 → 汇流。全部静默期为零输出，起振即淡入。
-// 可打断语义（D3/AC9）：状态目标用 setTargetAtTime 改写——随时改目标即随时打断，
-// 包络从当前值平滑滑向新目标，无残响堆积、无锁死。
+// → 呼吸随动增益（逐帧微调）→ 低通 → 汇流。
+// 可打断语义（D3/AC9）：一切调度都是时间戳标记而非定时器——新呼吸打断退场、
+// 静默打断进入，包络经 setTargetAtTime 从当前值滑向新目标，无残响堆积、无锁死。
 
 import { CONFIG } from '../config.js';
 
 // 声部状态机（design.md）：asleep → listening → entering → singing → leaving
-// T4 接通声部 1 的即时回应；listening 档位由 T5 的支声调度（慢半拍进入）启用。
+// listening = 已武装、等待自己的慢半拍进场拍（支声「等同伴换气」的状态化）
 export const VOICE_STATES = ['asleep', 'listening', 'entering', 'singing', 'leaving'];
 
 export class VoiceEngine {
@@ -31,7 +31,7 @@ export class VoiceEngine {
     }
     this._buildAmbient(vcfg.ambient);
 
-    this._breathCount = 0;   // T5 支声缠绕的确定性步进序列号
+    this._breathCount = 0;   // 支声缠绕的确定性步进序列号：同呼吸序列必得同织体
   }
 
   _buildVoice(index) {
@@ -82,13 +82,15 @@ export class VoiceEngine {
     return {
       index,
       state: 'asleep',
-      noteIndex: this._anchor,          // 声部音高在音阶表上的位置
+      noteIndex: this._anchor,          // 声部音高在音阶表上的起点
       oscSine,
       oscTri,
       envGain,
       breathGain,
       enteredAt: 0,
       leftAt: 0,
+      enterAt: null,                    // 慢半拍进场拍时间戳（listening 期间有效）
+      leaveAt: null,                    // 逐层退场拍时间戳（静默后生效）
     };
   }
 
@@ -124,19 +126,47 @@ export class VoiceEngine {
     voice.oscTri.frequency.setTargetAtTime(hzv, t, 0.06);
   }
 
-  // T4：声部 1 即时回应。T5 在此扩展支声调度（声部 i 慢半拍进入）。
+  // T5 支声调度：声部 1 即时回应；声部 i 进场拍 = 呼吸 + i × 呼吸周期 × entryDelayRatio
+  // （慢半拍，D1 声音侧）。一切打断在这里发生：新呼吸清退场标记、改写进场标记。
   handleBreathIn(ev) {
     this._breathCount += 1;
-    const v = this._voices[0];
-    this._enter(v, ev.at);
+    const periodMs = ev.periodMs || CONFIG.audio.detector.periodFallbackSeconds * 1000;
+    for (const v of this._voices) {
+      // 支声缠绕：每口呼吸在音阶表上确定性步进（无随机，同呼吸序列必得同织体）
+      const step = ((this._breathCount + v.index) % 3) - 1;   // -1 / 0 / +1 轮转
+      this._setNote(v, v.noteIndex + step);
+
+      if (v.index === 0) {
+        // 回应你的声部：即时进；已在唱则不重入，包络不动
+        v.leaveAt = null;
+        v.enterAt = null;
+        if (v.state !== 'singing' && v.state !== 'entering') {
+          this._enter(v, ev.at);
+        }
+        continue;
+      }
+      if (v.state === 'entering' || v.state === 'singing') {
+        v.leaveAt = null;          // 已在织体里，只清退场标记
+        continue;
+      }
+      v.leaveAt = null;            // 新呼吸打断退场（AC9）：mid-fall 的声部重新武装
+      v.enterAt = ev.at + v.index * periodMs * this._entryDelayRatio;
+      v.state = 'listening';
+    }
   }
 
-  // 呼气不断声——支声的托举正发生在换气间隙（T5 处理多声部情形）
+  // 呼气不断声——支声的托举正发生在换气间隙（母题的声音侧行为）
   handleBreathOut() {}
 
-  // 静默触发退场（D3「停止呼吸即退场」的声音侧；T5 扩展为逐层错开退场）
+  // T5 逐层退场：静默触发后声部 i 的退场拍 = 静默 + i × exitStaggerMs（AC4/MVP 线）。
+  // 静默打断进入：listening 中的声部清进场标记、排退场拍——永远进不来，也就无需硬切。
   handleSilence(ev) {
-    this._leave(this._voices[0], ev.at);
+    for (const v of this._voices) {
+      if (v.state === 'entering' || v.state === 'singing' || v.state === 'listening') {
+        v.enterAt = null;
+        v.leaveAt = ev.at + v.index * this._exitStaggerMs;
+      }
+    }
   }
 
   _enter(voice, atMs) {
@@ -155,10 +185,23 @@ export class VoiceEngine {
     voice.envGain.gain.setTargetAtTime(0, ctx.currentTime, tau);  // 阻尼滑落，可被打断
   }
 
-  // 每帧推进：状态标签迁移 + 歌唱中呼吸随动。时间戳判断而非 setTimeout——随时打断（AC9）
+  // 每帧推进：慢半拍进场、逐层退场、状态标签迁移、歌唱中呼吸随动。
+  // 全部按时间戳判断——任何状态随时可被新事件改写（AC9 无锁死）。
   update(now, envelope) {
     const t = this._timbre;
     for (const v of this._voices) {
+      if (v.state === 'listening' && v.enterAt !== null && now >= v.enterAt) {
+        v.enterAt = null;
+        this._enter(v, now);               // 慢半拍进场拍到
+      }
+      if (
+        v.leaveAt !== null &&
+        now >= v.leaveAt &&
+        (v.state === 'entering' || v.state === 'singing' || v.state === 'listening')
+      ) {
+        v.leaveAt = null;
+        this._leave(v, now);               // 逐层退场拍到
+      }
       if (v.state === 'entering' && now - v.enteredAt >= t.attackSeconds * 1000) {
         v.state = 'singing';
       }
