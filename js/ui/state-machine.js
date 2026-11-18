@@ -30,6 +30,7 @@ class App {
     this._engine = null;          // 首次手势后才创建（AudioContext 需用户手势）
     this._demo = new DemoMode();  // 合成呼吸源：与真实麦克风互为可换源（AC6 同一事件通路）
     this._demoActive = false;
+    this._micGranted = false;     // 麦克风是否曾授权（demo.stop 杀流后据此决定重接或回 idle）
 
     this._uiState = 'idle';
     this._lastCopyKey = null;
@@ -74,11 +75,7 @@ class App {
 
   _bindControls() {
     // 第一次手势：AudioContext + getUserMedia 都必须在手势回调内（自动播放策略）
-    const firstGesture = () => {
-      document.removeEventListener('pointerdown', firstGesture);
-      this._onFirstGesture();
-    };
-    document.addEventListener('pointerdown', firstGesture);
+    this._armFirstGesture();
 
     this._demoBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -97,6 +94,15 @@ class App {
     }
   }
 
+  // 首次手势可重复武装：demo 退出且从未授权麦克风时，重新等一次手势再走授权流
+  _armFirstGesture() {
+    const firstGesture = () => {
+      document.removeEventListener('pointerdown', firstGesture);
+      this._onFirstGesture();
+    };
+    document.addEventListener('pointerdown', firstGesture);
+  }
+
   async _onFirstGesture() {
     if (this._uiState !== 'idle' || this._demoActive) return;
     this._setState('prompting');
@@ -108,6 +114,7 @@ class App {
 
     const granted = await this._audio.requestMic({
       onGranted: () => {
+        this._micGranted = true;
         this._detector.setSource(() => this._audio.getEnvelope());
         this._setState('listening');
       },
@@ -138,7 +145,21 @@ class App {
       this._demoActive = false;
       this._demo.stop();
       this._detector.setSource(null);
-      this._setState(this._engine ? 'listening' : 'idle');
+      // 演示开始时 audio.stop() 已杀掉麦克风轨道——退出后必须按授权史恢复：
+      // 曾授权 → 重新 getUserMedia 接回真实包络；未授权 → 回 idle 并重新武装首次手势，
+      // 否则 UI 挂着 listening 而包络源为 null，真实模式死亡（跑不通 bug，2026-11-18）。
+      if (this._micGranted) {
+        this._audio.requestMic({
+          onGranted: () => {
+            this._detector.setSource(() => this._audio.getEnvelope());
+            this._setState('listening');
+          },
+          onDenied: () => this._setState('denied'),
+        });
+      } else {
+        this._setState('idle');
+        this._armFirstGesture();
+      }
       this._demoBtn.textContent = '演示模式';
     }
     document.body.dataset.demo = this._demoActive ? 'on' : 'off';
