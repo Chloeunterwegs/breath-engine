@@ -41,9 +41,15 @@
 
 - [ ] T9 真机验收（AC7）——目标 2026-11-30 前，本轮不施工
   iPhone Safari + Android Chrome 全流程走查；requirements.md MVP 验收线逐条核（含三条硬约束判定方法）。
+  归档核对（2026-11-18 · t_bc9ea18c 机械归档）：**未通过（未验）**，本条保持未勾选 —— 无 iPhone/Android 真机走查证据；现有 4 张 T9 截图均为 756×413 桌面视口（HTTPS 冒烟/看图），非真机画面；KIROWEEN-NOTES.md AC7 行仍记「未验」。
+  已备前置件（均在 /Users/a1/.hermes/kanban/workspaces/t_fdec6dae/）：`05-T9预检-安全上下文.md`、`t9-preflight/serve-https.py`（仓库同名件 scripts/serve-https.py，commit f919d88）、`t9-preflight/ca.cer` + `breath.cer/breath.key`（SAN 含 192.168.0.101）、`t9-https-smoke-demo-mode.png`、`t9-https-smoke-denied.png`、`t9-看图-首帧.png`、`t9-看图-合唱段.png`、`t9-preflight/lan-http-denied-branch.png`。
+  待办（Yian 真机执行）：按 05 路线 A 装 CA → iPhone Safari / Android Chrome 逐条核 MVP 验收线 → 截图/录屏绝对路径回填 KIROWEEN-NOTES AC7 行与本工作区，再勾本条。
 
 - [ ] T10 README 与 Demo 视频（提交件）——目标 2026-11-30 前，本轮不施工
   README 使用说明（含 Kiro 使用说明，见 KIROWEEN-NOTES.md 提交要求）+ 录 <3 分钟 Demo 视频上传 YouTube 公开。
+  归档核对（2026-11-18 · t_bc9ea18c 机械归档）：
+  - [x] T10-a README 使用说明（含 Kiro 使用说明）——完成 2026-11-16；证据：commit 25e3437、仓库 `README.md` L9–57（Run / Demo Mode / 录制指引 / Kiro Usage）。
+  - [ ] T10-b Demo 视频 <3 分钟、YouTube 公开、手机运行画面——**缺口**：全仓无 .mp4/.mov/.webm 文件，仓库与工作区均无 YouTube 链接（2026-11-18 核）；录制脚本已备（`01-录屏执行单.md`、仓库 `DEMO-SCRIPT.md`）。
 
 完成标准：
 - 本轮 T1–T8：全部勾选，requirements.md「MVP 验收线」逐条核过、三条硬约束判定方法全过。
